@@ -17,3 +17,7 @@
 [4 - Reseting password views](../../tree/ff0f00d95bf100bd89d8918c5211f540705d83e7/)
 
 #### User registration and user profiles
+
+[5 - User Registration](../../tree/c39309233070144dce71a0916628efbaf4361ecf/)
+
+[6 - Extending the user model (Profile)](../../tree/e78e860f24930f1213b393249bb5e8304827d508/)
