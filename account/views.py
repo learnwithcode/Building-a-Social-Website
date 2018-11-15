@@ -1,8 +1,36 @@
 from django.http  import HttpResponse
 from django.shortcuts import render
-from django.contrib.auth import authenticate, login
-from .forms import LoginForm
+from django.contrib.auth import authenticate, login, get_user_model
+from .forms import LoginForm, UserRegistrationForm, ProfileEditForm, UserEditForm
 from django.contrib.auth.decorators import login_required
+
+User = get_user_model()
+def register(request):
+  if request.method == 'POST':
+    user_form = UserRegistrationForm(request.POST)
+    if user_form.is_valid():
+      cd = user_form.cleaned_data
+      '''
+      One way
+      new_user = User.objects.create_user(cd['username'], cd['email'], 
+      cd['password'])
+
+      Another way
+      '''
+      # Create a new user object but avoid saving yet
+      new_user = user_form.save(commit=False)
+      # set the chosen password
+      new_user.set_password(cd['password'])
+      #save the user  objects
+      new_user.save()
+      Profile.objects.create(user=new_user)
+      
+      return render(request, "account/register_done.html", 
+                                                        {'new_user':new_user})
+  else:
+    user_form = UserRegistrationForm()
+  return render(request, "account/register.html", 
+                                                  {'user_form':user_form})    
 
 
 def  user_login(request):
@@ -24,7 +52,11 @@ def  user_login(request):
   else:
     form = LoginForm()
 
-  return render(request, 'account/login.html', {'form':form})                                                           
+  return render(request, 'account/login.html', {'form':form})
+                                                             
 @login_required
 def dashboard(request):
     return render(request, 'account/dashboard.html', {'section':'dashboard'})
+
+
+                                                           
